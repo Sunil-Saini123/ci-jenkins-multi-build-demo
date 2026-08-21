@@ -15,15 +15,18 @@ repositories {
     mavenCentral()
 }
 
+// Don't run Gradle's automatic JUnit test task.
+// Our demo test is a standalone Java program.
 tasks.named('test') {
-    useJUnitPlatform()
+    enabled = false
 }
 
 tasks.register('demoTest', JavaExec) {
+    dependsOn compileTestJava
     classpath = sourceSets.test.runtimeClasspath
     mainClass = 'com.vit.demo.AppTest'
 }
 
 tasks.named('build') {
-    dependsOn 'demoTest'
+    dependsOn demoTest
 }
