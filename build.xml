@@ -1,0 +1,36 @@
+<project name="ci-jenkins-demo" default="build" basedir=".">
+    <property name="src.main" value="src/main/java"/>
+    <property name="src.test" value="src/test/java"/>
+    <property name="build.dir" value="ant-build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="dist.dir" value="${build.dir}/dist"/>
+
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.main}" destdir="${classes.dir}" includeantruntime="false" source="21" target="21"/>
+    </target>
+
+    <target name="test" depends="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.test}" destdir="${classes.dir}" includeantruntime="false"
+               source="21" target="21" classpath="${classes.dir}"/>
+        <java classname="com.vit.demo.AppTest" fork="true" failonerror="true">
+            <classpath><pathelement path="${classes.dir}"/></classpath>
+        </java>
+    </target>
+
+    <target name="jar" depends="test">
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.dir}/ci-jenkins-demo-1.0.0.jar" basedir="${classes.dir}">
+            <manifest>
+                <attribute name="Main-Class" value="com.vit.demo.App"/>
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="build" depends="jar"/>
+</project>
